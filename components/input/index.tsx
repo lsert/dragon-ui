@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import PropsType, { OtherProps } from './PropsType';
+import PropsType, { OtherProps, InputTypesIF } from './PropsType';
 
 function fixControlledValue(value) {
   if (typeof value === 'undefined' || value === null) {
@@ -9,7 +9,7 @@ function fixControlledValue(value) {
   return value;
 }
 
-class Input extends Component<PropsType, any> {
+class Input<T extends keyof InputTypesIF = 'text'> extends Component<Merge<InputTypesIF[T], PropsType>, any> {
   static defaultProps = {
     prefixCls: 'ui-input',
     type: 'text',
@@ -90,5 +90,4 @@ class Input extends Component<PropsType, any> {
     return <span>{input}</span>;
   }
 }
-
 export default Input;

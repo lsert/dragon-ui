@@ -18,13 +18,13 @@ interface BasicPropType {
   className?: string;
   value?: string;
   defaultValue?: string;
-  rows?: number;
-  cols?: number;
-  style?: CSSProperties;
   placeholder?: string;
   maxLength?: number;
 }
 
-type PropType = (InputHTMLAttributes<{}> | TextareaHTMLAttributes<{}>) & BasicPropType;
+export interface InputTypesIF {
+  textarea: TextareaHTMLAttributes<HTMLTextAreaElement>;
+  text: InputHTMLAttributes<HTMLInputElement>;
+}
 
-export default PropType;
+export default BasicPropType;
