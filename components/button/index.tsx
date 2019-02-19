@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import ButtonProps from './PropsType';
+import ButtonProps,{BasicPropsType} from './PropsType';
 import Icon from '../icon';
 
-class Button extends Component<ButtonProps, any> {
+class Button<T> extends Component<ButtonProps, any> {
   static defaultProps = {
     prefixCls: 'ui-button',
     type: 'button',
@@ -22,7 +22,7 @@ class Button extends Component<ButtonProps, any> {
     onClick: () => { },
   };
 
-  render () {
+  render() {
     const { props } = this;
     const {
       prefixCls,
@@ -80,11 +80,11 @@ class Button extends Component<ButtonProps, any> {
     let textContent =
       loadingStatus ? (
         <span>
-          <Icon type="loading" className="rotate360"/> {children}
+          <Icon type="loading" className="rotate360" /> {children}
         </span>
       ) : (
-        children
-      );
+          children
+        );
 
     return (
       href

@@ -1,12 +1,6 @@
-import { InputHTMLAttributes, TextareaHTMLAttributes, CSSProperties } from 'react';
+import { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 export type size = 'xl' | 'lg' | 'sm' | 'xs';
-
-export interface OtherProps {
-  value?: string;
-  defaultValue?: string;
-  [propName: string]: any;
-}
 
 interface BasicPropType {
   prefixCls?: string;
@@ -15,11 +9,6 @@ interface BasicPropType {
   radius?: boolean;
   isRadius?: boolean;
   isDisabled?: boolean;
-  className?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-  maxLength?: number;
 }
 
 export interface InputTypesIF {
