@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, MouseEvent, CSSProperties, AnchorHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react';
 export type theme = 'default' | 'info' | 'success' | 'warning' | 'error';
 export type size = 'xl' | 'lg' | 'sm' | 'xs';
 
@@ -25,11 +25,15 @@ export interface BasicPropsType {
   loading?: boolean;
 }
 
-interface ButtonTypeIF {
-  link: AnchorHTMLAttributes<HTMLAnchorElement>;
-  button: AnchorHTMLAttributes<HTMLAnchorElement>;
+export interface ButtonPropsIF extends BasicPropsType, ButtonHTMLAttributes<HTMLButtonElement> {
+
 }
 
-type PropsType = ButtonHTMLAttributes<HTMLButtonElement> & BasicPropsType;
+export interface LinkPropsIF extends BasicPropsType, AnchorHTMLAttributes<HTMLAnchorElement> {
 
-export default PropsType;
+}
+
+export interface ButtonTypeIF {
+  link: LinkPropsIF;
+  button: ButtonPropsIF;
+}

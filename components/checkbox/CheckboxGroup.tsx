@@ -1,13 +1,13 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, ReactNode, ChangeEvent } from 'react';
 import Checkbox from './Checkbox';
 import { GroupProps } from './PropsType';
 
 class CheckboxGroup extends Component<GroupProps, any> {
   static defaultProps = {
-    onChange: () => {},
+    onChange: () => { },
   };
 
-  constructor(props) {
+  constructor(props: Readonly<{ children?: ReactNode }> & Readonly<GroupProps>) {
     super(props);
     this.state = {
       value:
@@ -17,7 +17,7 @@ class CheckboxGroup extends Component<GroupProps, any> {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Readonly<{ children?: ReactNode }> & Readonly<GroupProps>) {
     if ('value' in nextProps || this.getCheckedValue(nextProps.children)) {
       this.setState({
         value: nextProps.value || this.getCheckedValue(nextProps.children),
@@ -27,10 +27,10 @@ class CheckboxGroup extends Component<GroupProps, any> {
 
   render() {
     const { props } = this;
-
     const children = React.Children.map(props.children, checkbox => (
       <Checkbox
         {...(checkbox as ReactElement<any>).props}
+        isDisabled={props.isDisabled}
         onChange={e => this.onCheckboxChange(e)}
         checked={!!(this.state.value.indexOf((checkbox as ReactElement<any>).props.value) > -1)}
       />
@@ -40,7 +40,7 @@ class CheckboxGroup extends Component<GroupProps, any> {
   }
 
   // eslint-disable-next-line
-  getCheckedValue(children) {
+  getCheckedValue(children: JSX.Element) {
     const checkedValue: ReactElement<any>[] = [];
     React.Children.forEach(children, (checkbox) => {
       if ((checkbox as ReactElement<any>).props && (checkbox as ReactElement<any>).props.checked) {
@@ -50,7 +50,7 @@ class CheckboxGroup extends Component<GroupProps, any> {
     return checkedValue;
   }
 
-  onCheckboxChange(e) {
+  onCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     const { value } = this.state;
     const index = value.indexOf(e.target.value);
 
@@ -63,7 +63,10 @@ class CheckboxGroup extends Component<GroupProps, any> {
     this.setState({
       value,
     });
-    this.props.onChange(value);
+
+    if (this.props.onChange) {
+      this.props.onChange(value);
+    }
   }
 }
 

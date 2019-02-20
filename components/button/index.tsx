@@ -1,9 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEvent } from 'react';
 import classnames from 'classnames';
-import ButtonProps,{BasicPropsType} from './PropsType';
+import { ButtonTypeIF, ButtonPropsIF, LinkPropsIF } from './PropsType';
 import Icon from '../icon';
 
-class Button<T> extends Component<ButtonProps, any> {
+interface ButtonElementIF {
+  link: HTMLAnchorElement;
+  button: HTMLButtonElement;
+}
+
+function isLink(props: LinkPropsIF | ButtonPropsIF): props is LinkPropsIF {
+  return props.hasOwnProperty('href');
+}
+
+class Button<T extends keyof ButtonTypeIF = 'button'> extends Component<ButtonTypeIF[T], {}> {
   static defaultProps = {
     prefixCls: 'ui-button',
     type: 'button',
@@ -19,8 +28,24 @@ class Button<T> extends Component<ButtonProps, any> {
     isLoading: false,
     className: null,
     style: {},
-    onClick: () => { },
   };
+
+  onClick = (e: MouseEvent<ButtonElementIF[T]>) => {
+    const { disabled, isDisabled, loading, isLoading } = this.props;
+    const disabledStatus = disabled || isDisabled;
+    const loadingStatus = loading || isLoading;
+    if (isLink(this.props)) {
+      let props: Readonly<{ children?: React.ReactNode; }> & Readonly<ButtonTypeIF['link']> = this.props;
+      if (!disabledStatus && !loadingStatus && props.onClick) {
+        props.onClick(e as MouseEvent<HTMLAnchorElement>);
+      }
+    } else {
+      let props: Readonly<{ children?: React.ReactNode; }> & Readonly<ButtonTypeIF['button']> = this.props;
+      if (!disabledStatus && !loadingStatus && props.onClick) {
+        props.onClick(e as MouseEvent<HTMLButtonElement>);
+      }
+    }
+  }
 
   render() {
     const { props } = this;
@@ -46,11 +71,8 @@ class Button<T> extends Component<ButtonProps, any> {
       isLoading,
       loading,
       className,
-      onClick,
       children,
-      style,
-      href,
-      target,
+      onClick,
       ...others
     } = props;
 
@@ -77,39 +99,30 @@ class Button<T> extends Component<ButtonProps, any> {
       [className!]: !!className,
     });
 
-    let textContent =
-      loadingStatus ? (
-        <span>
-          <Icon type="loading" className="rotate360" /> {children}
-        </span>
-      ) : (
-          children
-        );
+    let textContent = loadingStatus ? <span><Icon type="loading" className="rotate360" /> {children}</span> : children;
 
-    return (
-      href
-        ? <a
-          className={classes}
-          href={href}
-          target={target}
-          {...others}
-          onClick={e => (!disabledStatus && !loadingStatus) && onClick(e)}
-        >
-          {textContent}
-        </a>
-        : (
-          <button
-            type={type}
-            className={classes}
-            style={style}
-            disabled={disabledStatus}
-            onClick={e => (!disabledStatus && !loadingStatus) && onClick(e)}
-            {...others}
-          >
-            {textContent}
-          </button>
-        )
-    );
+    if (isLink(props)) {
+      const { href, target } = (props as Readonly<LinkPropsIF>);
+      return <a
+        className={classes}
+        href={href}
+        target={target}
+        onClick={this.onClick}
+        {...others}
+      >
+        {textContent}
+      </a>;
+    }
+
+    return <button
+      type={type}
+      className={classes}
+      disabled={disabledStatus}
+      onClick={this.onClick}
+      {...others}
+    >
+      {textContent}
+    </button>;
   }
 }
 

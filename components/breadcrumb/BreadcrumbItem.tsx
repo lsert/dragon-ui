@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, HTMLAttributes } from 'react';
 import classnames from 'classnames';
 import { ItemPropsType } from './PropsType';
 
-class BreadcrumbItem extends Component<ItemPropsType, any> {
+interface PropsIF extends ItemPropsType, HTMLAttributes<HTMLDivElement> { }
+
+class BreadcrumbItem extends Component<PropsIF, {}> {
   static defaultProps = {
     separator: '/',
   };
 
   render() {
-    const {
-      className, href, separator, children, style,
-    } = this.props;
+    const { className, href, separator, children, ...others } = this.props;
 
     const cls = classnames({
       [className!]: !!className,
@@ -22,11 +22,11 @@ class BreadcrumbItem extends Component<ItemPropsType, any> {
           {children}
         </a>
       ) : (
-        <span className="ui-breadcrumb-link">{children}</span>
-      );
+          <span className="ui-breadcrumb-link">{children}</span>
+        );
 
     return (
-      <span className={cls} style={style}>
+      <span className={cls} {...others}>
         {text}
         <span className="ui-breadcrumb-separator">{separator}</span>
       </span>

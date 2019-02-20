@@ -1,25 +1,24 @@
-import React, { Component, cloneElement, ReactElement } from 'react';
+import React, { Component, cloneElement, ReactElement, HTMLAttributes } from 'react';
 import classnames from 'classnames';
 import { PropsType } from './PropsType';
+import BreadcrumbItem from './BreadcrumbItem';
 
-class Breadcrumb extends Component<PropsType, any> {
+interface PropsIF extends HTMLAttributes<HTMLDivElement>, PropsType { }
+
+class Breadcrumb extends Component<PropsIF, any> {
   static defaultProps = {
     prefixCls: 'ui-breadcrumb',
     separator: '/',
   };
 
-  static Item;
+  static Item: typeof BreadcrumbItem = BreadcrumbItem;
 
   render() {
-    const {
-      className, separator, children, style,
-    } = this.props;
-
+    const { className, separator, children, ...others } = this.props;
     const cls = classnames({
       'ui-breadcrumb': true,
       [className!]: !!className,
     });
-
     // eslint-disable-next-line
     const items = React.Children.map(children, (element, index) => {
       return cloneElement(element as ReactElement<any>, {
@@ -29,7 +28,7 @@ class Breadcrumb extends Component<PropsType, any> {
     });
 
     return (
-      <div className={cls} style={style}>
+      <div className={cls} {...others}>
         {items}
       </div>
     );

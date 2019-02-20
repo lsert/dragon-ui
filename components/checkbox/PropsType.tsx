@@ -1,7 +1,11 @@
+import Checkbox from './Checkbox';
+
 export interface GroupProps {
   value?: string;
   defaultValue?: string;
-  onChange: (e: any) => void;
+  isDisabled?: boolean;
+  children: JSX.Element;
+  onChange?: (e: any) => void;
 }
 
 export default interface PropsType {
