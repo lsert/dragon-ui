@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom';
 import classnames from 'classnames';
 import Popper from './popper';
 import Events from '../utils/events';
-import PropsType from './PropsType';
+import PropsType, { directionMap } from './PropsType';
 
 const directMap = {
   top: 'top',
@@ -29,18 +29,18 @@ class Popover extends Component<PropsType, any> {
     mask: false,
     radius: true,
     direction: 'bottomRight',
-    onMaskClick() {},
+    onMaskClick() { },
     content: null,
   };
 
-  private instance;
-  private pop;
-  private reference;
-  private popper;
-  private timer;
-  private arrow;
+  private instance!: HTMLDivElement;
+  private pop!: HTMLDivElement;
+  private reference!: HTMLElement;
+  private popper!: Popper;
+  private timer?: number;
+  private arrow!: HTMLSpanElement;
 
-  constructor(props) {
+  constructor(props: PropsType) {
     super(props);
     this.state = {
       visible: false,
@@ -58,14 +58,15 @@ class Popover extends Component<PropsType, any> {
           visible: !this.state.visible,
         });
       });
-      Events.on(document, 'click', ({ target }) => {
+      Events.on(document, 'click', ({ target }: MouseEvent) => {
+        if (!target) return;
         if (
           !instance ||
-          instance.contains(target) ||
+          instance.contains(target as Node) ||
           !reference ||
-          reference.contains(target) ||
+          reference.contains(target as Node) ||
           !pop ||
-          pop.contains(target) ||
+          pop.contains(target as Node) ||
           !this.popper
         ) {
           return;
@@ -88,7 +89,7 @@ class Popover extends Component<PropsType, any> {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: this['props']) {
     if (this.state.visible !== nextProps.visible) {
       this.setState({
         visible: !!nextProps.visible,
@@ -108,9 +109,12 @@ class Popover extends Component<PropsType, any> {
         if (this.arrow) {
           this.arrow.setAttribute('x-arrow', '');
         }
-        this.popper = new Popper(reference, this.pop, {
-          placement: directMap[direction],
-        });
+        let placement = directMap[direction] as directionMap;
+        if (reference && reference instanceof HTMLElement) {
+          this.popper = new Popper(reference, this.pop, {
+            placement,
+          });
+        }
       }
     } else {
       if (this.popper) {
@@ -163,8 +167,8 @@ class Popover extends Component<PropsType, any> {
     const child = React.isValidElement(children) ? (
       children
     ) : (
-      <span>{children}</span>
-    );
+        <span>{children}</span>
+      );
     const popContent = typeof content === 'function' ? content() : content;
     const cls = classnames({
       'ui-popover': true,
@@ -185,7 +189,9 @@ class Popover extends Component<PropsType, any> {
         className={cls}
         // tslint:disable-next-line:jsx-no-multiline-js
         ref={(instance) => {
-          this.instance = instance;
+          if (instance) {
+            this.instance = instance;
+          }
         }}
       >
         {mask ? <div className={maskCls} onClick={onMaskClick} /> : null}
@@ -193,7 +199,9 @@ class Popover extends Component<PropsType, any> {
           className={contentCls}
           // tslint:disable-next-line:jsx-no-multiline-js
           ref={(pop) => {
-            this.pop = pop;
+            if (pop) {
+              this.pop = pop;
+            }
           }}
         >
           {popContent}
@@ -201,11 +209,13 @@ class Popover extends Component<PropsType, any> {
             className={`${prefixCls}-arrow`}
             // tslint:disable-next-line:jsx-no-multiline-js
             ref={(arrow) => {
-              this.arrow = arrow;
+              if (arrow) {
+                this.arrow = arrow;
+              }
             }}
           />
         </div>
-        {React.cloneElement(child, { ref: (reference) => { this.reference = reference; } })}
+        {React.cloneElement(child, { ref: (reference: HTMLElement) => { this.reference = reference; } })}
       </div>
     );
   }

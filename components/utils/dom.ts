@@ -45,16 +45,16 @@ const domUtil = {
   },
 
   // 设置元素行内样式
-  setStyle: (e, styles) => {
-    function is_numeric(n) {
+  setStyle: <T extends { [x: string]: string | number }>(e: HTMLElement, styles: T) => {
+    function is_numeric(n: any) {
       return (n !== '' && !isNaN(parseFloat(n)) && isFinite(n));
     }
-    Object.keys(styles).forEach((prop) => {
+    (Object.keys(styles) as Array<keyof T>).forEach((prop) => {
       let unit = '';
-      if (['width', 'height', 'top', 'right', 'bottom', 'left'].indexOf(prop) !== -1 && is_numeric(styles[prop])) {
+      if (['width', 'height', 'top', 'right', 'bottom', 'left'].indexOf(prop as string) !== -1 && is_numeric(styles[prop])) {
         unit = 'px';
       }
-      e.style[prop] = styles[prop] + unit;
+      e.style.setProperty(prop as string, styles[prop] + unit);
     });
   },
 
@@ -65,14 +65,14 @@ const domUtil = {
   },
 
   // 判断元素是否固定定位或者是否在固定定位元素内
-  isFixed: (e) => {
+  isFixed(e: HTMLElement): HTMLElement | boolean {
     if (e === window.document.body) {
       return false;
     }
     if (domUtil.getStyleComputedProperty(e, 'position') === 'fixed') {
       return true;
     }
-    return e.parentNode ? domUtil.isFixed(e.parentNode) : e;
+    return e.parentNode ? domUtil.isFixed(e.parentNode as HTMLElement) : e;
   },
 
   // 获取元素完整尺寸(offset size + margin)
@@ -98,7 +98,7 @@ const domUtil = {
   },
 
   // 获取元素的offsetParent
-  getOffsetParent: (e) => {
+  getOffsetParent: (e: HTMLElement) => {
     const offsetParent = e.offsetParent;
     return offsetParent === window.document.body || !offsetParent ? window.document.documentElement : offsetParent;
   },

@@ -1,5 +1,7 @@
 // tslint:disable-next-line:max-line-length
 export type direction = 'topLeft' | 'top' | 'topRight' | 'rightTop' | 'right' | 'rightBottom' | 'bottomLeft' | 'bottom' | 'bottomRight' | 'leftTop' | 'left' | 'leftBottom';
+export type directionMap = 'top' | 'top-start' | 'top-end' | 'right' | 'right-end'
+  | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
 export type content = (() => React.ReactNode) | string | React.ReactNode;
 
 export default interface PropsType {
