@@ -7,7 +7,7 @@ export interface OptionProps {
   disabled?: boolean;
   showCheckIcon?: boolean;
   style?: CSSProperties;
-  onChange: (e: MouseEvent) => void;
+  onChange: (e: MouseEvent<HTMLLIElement>) => void;
   onDoubleClick?: (e: MouseEvent) => void;
 }
 
@@ -22,7 +22,7 @@ export interface MultipleProps {
   size?: size;
   style?: CSSProperties;
   onChange: (value: any, row: object, shiftKey?: boolean) => () => void;
-  onDoubleClick?: () => void;
+  onDoubleClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 interface ChangeValue { value: string | number; text: ReactNode; index: number; }
