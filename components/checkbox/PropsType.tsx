@@ -15,5 +15,5 @@ export default interface PropsType {
   disabled?: boolean;
   isDisabled?: boolean;
   indeterminate?: boolean;
-  onChange: (e: any) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

@@ -1,4 +1,4 @@
-import React, { PureComponent, cloneElement } from 'react';
+import React, { PureComponent, cloneElement, ReactElement } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -28,7 +28,7 @@ export default class Row extends PureComponent<IProps> {
     align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   };
 
-  render () {
+  render() {
     const { gutter, prefixCls, style, className, children, justify, align, type } = this.props;
     const rowStyle = gutter ? { marginLeft: -gutter / 2, marginRight: -gutter / 2 } : {};
     const cls = classnames(prefixCls, className, {
@@ -40,11 +40,11 @@ export default class Row extends PureComponent<IProps> {
     return (
       <div className={cls} style={{ ...style, ...rowStyle }}>
         {
-          React.Children.map(children, (element: React.ReactElement<any>, index) =>
-            cloneElement(element, {
+          React.Children.map(children, (element: React.ReactNode, index) =>
+            React.isValidElement(element) ? cloneElement<{ gutter: typeof gutter }>(element as ReactElement<{ gutter: typeof gutter }>, {
               gutter,
               key: index,
-            }),
+            }) : Element,
           )
         }
       </div>

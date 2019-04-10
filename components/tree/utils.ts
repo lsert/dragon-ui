@@ -1,8 +1,8 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, isValidElement } from 'react';
 import TreeNode from './TreeNode';
 
 // 判断当前对象是否是object类型
-function isPlainObject(obj) {
+function isPlainObject(obj: any) {
   if (Object.prototype.toString.call(obj).toLowerCase() !== '[object object]') {
     return false;
   }
@@ -14,9 +14,9 @@ function isPlainObject(obj) {
 }
 
 // 深拷贝对象
-export function deepCopy(data) {
+export function deepCopy<T extends any>(data: T): T {
   if (Array.isArray(data)) {
-    return data.map((elem) => {
+    return data.map((elem: any) => {
       return deepCopy(elem);
     });
   }
@@ -27,7 +27,7 @@ export function deepCopy(data) {
     const value = data[key];
     prev[key] = deepCopy(value);
     return prev;
-  }, {});
+  }, {} as T);
 }
 
 /**
@@ -36,7 +36,7 @@ export function deepCopy(data) {
  * @param value 要删除的值
  * @returns {Array} 返回的新数组
  */
-export function arrDel(list, value) {
+export function arrDel<T>(list: Array<T>, value: T) {
   const clone = list.slice();
   const index = clone.indexOf(value);
   if (index >= 0) {
@@ -51,7 +51,7 @@ export function arrDel(list, value) {
  * @param value 要添加的值
  * @returns {Array} 返回的新数组
  */
-export function arrAdd(list, value) {
+export function arrAdd<T>(list: Array<T>, value: T) {
   const clone = list.slice();
   if (clone.indexOf(value) === -1) {
     clone.push(value);
@@ -78,10 +78,13 @@ export const getTreeNodeChildren = (node: { children?: ReactNode }): Array<React
  * @param node {object} 要处理的节点对象
  * @returns {Array} 返回过滤完的节点
  */
-export function convertTreeToData(treeNode): Array<object> {
-  if (treeNode && treeNode.length !== 0) {
-    return React.Children.toArray(treeNode).map((node: ReactElement<any>) => {
-      const { children, ...props } = node.props;
+export function convertTreeToData(treeNode: ReactNode): Array<ReactNode> {
+  if (treeNode) {
+    return React.Children.toArray(treeNode).map((node: ReactNode) => {
+      if (!isValidElement(node)) {
+        return node;
+      }
+      const { children, ...props } = (node as ReactElement<any>).props;
       const obj = { ...props };
       if (children) {
         const treeNodeChildren = getTreeNodeChildren({ children });
@@ -96,7 +99,7 @@ export function convertTreeToData(treeNode): Array<object> {
 }
 
 // 判断当前节点是否是禁用状态
-export function isCheckDisabled(node) {
+export function isCheckDisabled<T extends { checkDisabled: boolean }>(node: T) {
   const { checkDisabled = false } = node;
   return checkDisabled;
 }
@@ -106,7 +109,7 @@ export function isCheckDisabled(node) {
  * @param keys {string} 要获取的结点的keys
  * @param treeData {array} 整个树结点
  */
-function getNodeFromKey(keys, treeData: Array<object>) {
+function getNodeFromKey(keys: string, treeData: Array<object>) {
   return keys.split('-').reduce((node, keySplit, index) => {
     if (!node || node.length === 0) {
       return null;

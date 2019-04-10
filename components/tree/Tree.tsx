@@ -1,4 +1,4 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import TreeNode from './TreeNode';
 import PropsType from './PropsType';
 import {
@@ -78,8 +78,8 @@ class Tree extends Component<PropsType, StateType> {
     }
     this.setState(newState);
   }
-
-  onNodeCheck = (node, targetChecked, event: MouseEvent) => {
+  // todo do not use any type
+  onNodeCheck = (node: any, targetChecked: any, event: React.ChangeEvent<HTMLInputElement>) => {
     const { onCheck } = this.props;
     const { keys } = node.props;
     const { treeData: originalTreeData } = this.state;
@@ -104,7 +104,8 @@ class Tree extends Component<PropsType, StateType> {
     }
   }
 
-  onNodeExpand = (node, targetExpanded, event) => {
+  // todo do not use any type
+  onNodeExpand = (node: any, targetExpanded: any, event: any) => {
     let { expandedKeys } = this.state;
     const { onExpand } = this.props;
     const { keys } = node.props;
@@ -128,10 +129,12 @@ class Tree extends Component<PropsType, StateType> {
     }
   }
 
-  renderTreeNodes = (data) => {
+  // todo do not use any type
+  renderTreeNodes = (data: any) => {
     const { prefixCls, canCheck } = this.props;
     const { expandedKeys, checkedKeys, halfCheckedKeys } = this.state;
-    return data.map((item, index) => {
+    // todo do not use any type
+    return data.map((item: any, index: number) => {
       const { keys, title, checkDisabled, children } = item;
       return (
         <TreeNode

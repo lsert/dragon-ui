@@ -58,7 +58,7 @@ class TreeNode extends Component<TreeNodePropsType, any> {
     return (
       <span className={classnames(`${prefixCls}-checkbox`)}>
         <Checkbox
-          onChange={(e) => this.onCheck(e)}
+          onChange={this.onCheck}
           isDisabled={checkDisabled}
           checked={checked || isHalfChecked}
           indeterminate={isHalfChecked}
@@ -116,7 +116,7 @@ class TreeNode extends Component<TreeNodePropsType, any> {
     );
   }
 
-  onCheck = (e) => {
+  onCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, onNodeCheck } = this.props;
     const targetChecked = !checked;
     if (!isCheckDisabled(this) && onNodeCheck) {
@@ -124,7 +124,7 @@ class TreeNode extends Component<TreeNodePropsType, any> {
     }
   }
 
-  onExpand = (e) => {
+  onExpand = (e: React.MouseEvent) => {
     const { expanded, onNodeExpand } = this.props;
     const targetExpanded = !expanded;
     if (onNodeExpand) {

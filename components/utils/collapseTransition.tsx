@@ -22,12 +22,12 @@ export default class CollapseTransition extends Component<IProps, any> {
     this.leave();
   }
 
-  componentDidUpdate(props) {
+  componentDidUpdate(props: this['props']) {
     if (this.props.visible !== props.visible) this.triggerChange(this.props.visible);
   }
 
-  shouldComponentUpdate (props) {
-    return this.props.visible !== props.visiblel;
+  shouldComponentUpdate(props: this['props']) {
+    return this.props.visible !== props.visible;
   }
 
   triggerChange(visible: boolean): void {
@@ -40,7 +40,7 @@ export default class CollapseTransition extends Component<IProps, any> {
     }
   }
 
-  beforeEnter () {
+  beforeEnter() {
     const el: any = this.collapseWrap.current;
     el.dataset.oldPaddingTop = el!.style.paddingTop;
     el.dataset.oldPaddingBottom = el!.style.paddingBottom;
@@ -50,14 +50,14 @@ export default class CollapseTransition extends Component<IProps, any> {
     el.style.paddingBottom = 0;
   }
 
-  enter () {
+  enter() {
     const el: any = this.collapseWrap.current;
     let tempHeight = 0;
     let tempPaddingTop = 0;
     let tempPaddingBottom = 0;
     el.style.display = 'block';
 
-    function step (context) {
+    function step(context: CollapseTransition) {
       tempHeight = Math.min(el.scrollHeight, tempHeight += el.scrollHeight * percent);
       tempPaddingTop = Math.min(el.dataset.oldPaddingTop, tempPaddingTop += el.dataset.oldPaddingTop * percent);
       tempPaddingBottom = Math.min(el.dataset.oldPaddingBottom, tempPaddingBottom += el.dataset.oldPaddingBottom * percent);
@@ -101,7 +101,7 @@ export default class CollapseTransition extends Component<IProps, any> {
     let tempPaddingTop = el.dataset.oldPaddingTop;
     let tempPaddingBottom = el.dataset.oldPaddingBottom;
 
-    function step (context) {
+    function step(context: CollapseTransition) {
       tempHeight = Math.max(0, tempHeight -= el.scrollHeight * percent);
       tempPaddingTop = Math.max(0, tempPaddingTop -= el.dataset.oldPaddingTop * percent);
       tempPaddingBottom = Math.max(0, tempPaddingBottom -= el.dataset.oldPaddingBottom * percent);
@@ -129,7 +129,7 @@ export default class CollapseTransition extends Component<IProps, any> {
     el.style.paddingBottom = el.dataset.oldPaddingBottom;
   }
 
-  render () {
+  render() {
     return (
       <div
         className="collapse-transition"

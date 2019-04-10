@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropsType from './PropsType';
+import CheckboxGroup from './CheckboxGroup';
 
 class Checkbox extends Component<PropsType, any> {
-  static Group;
+  static Group: CheckboxGroup;
 
   static defaultProps = {
     prefixCls: 'za-checkbox',
     defaultChecked: false,
     isDisabled: false,
     indeterminate: false,
-    onChange: () => {},
+    onChange: () => { },
   };
 
-  constructor(props) {
+  constructor(props: PropsType) {
     super(props);
     this.state = {
       checked: props.checked || props.defaultChecked,
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: this['props']) {
     if ('checked' in nextProps) {
       this.setState({
         checked: !!nextProps.checked,
@@ -28,7 +29,7 @@ class Checkbox extends Component<PropsType, any> {
     }
   }
 
-  _onClick(e) {
+  _onClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = this.state;
 
     this.setState({
@@ -66,7 +67,7 @@ class Checkbox extends Component<PropsType, any> {
             value={value}
             checked={this.state.checked}
             disabled={disabled}
-            onChange={e => this._onClick(e)}
+            onChange={this._onClick}
           />
           <span className={`${prefixCls}__inner`} />
         </span>

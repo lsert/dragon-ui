@@ -14,7 +14,7 @@ class Avatar extends Component<PropsType, any> {
     onError: () => false,
   };
 
-  constructor(props) {
+  constructor(props: PropsType) {
     super(props);
     this.state = {
       loadError: false,
@@ -60,27 +60,27 @@ class Avatar extends Component<PropsType, any> {
 
     const inlineStyle = (typeof size === 'number') ? {
       ...style,
-       width: size,
-       height: size,
-       lineHeight: size + 'px',
-       fontSize: size / 2 + 'px',
-      } : { ...style };
+      width: size,
+      height: size,
+      lineHeight: size + 'px',
+      fontSize: size / 2 + 'px',
+    } : { ...style };
 
     const spanStyle = {
       position: 'absolute' as 'absolute',
-      transform: 'scale(' + (1 - 0.1 * strLength ) + ')',
+      transform: 'scale(' + (1 - 0.1 * strLength) + ')',
       left: 'calc(50% - ' + 4.5 * strLength + 'px )',
-      };
+    };
 
     return (
-        <span
-          style={inlineStyle}
-          className={cls}
-        >
-        {hasImage && !loadError && <img src={src} alt={alt} onError={() => this._onError()}/>}
-        {!hasImage && hasIcon && <Icon type={icon}/>}
-        {(!hasImage || hasImage && loadError) && !hasIcon && hasString &&  <span style={spanStyle}>{children}</span>}
-        </span>
+      <span
+        style={inlineStyle}
+        className={cls}
+      >
+        {hasImage && !loadError && <img src={src} alt={alt} onError={() => this._onError()} />}
+        {!hasImage && hasIcon && <Icon type={icon} />}
+        {(!hasImage || hasImage && loadError) && !hasIcon && hasString && <span style={spanStyle}>{children}</span>}
+      </span>
     );
   }
 }

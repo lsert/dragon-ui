@@ -17,7 +17,7 @@ export default interface PropsType {
     checkedObj: {
       node: TreeNode,
       checked: boolean,
-      event: MouseEvent,
+      event: React.ChangeEvent<HTMLInputElement>,
     }): void;
 
   onExpand?(expandedObj: {
@@ -30,7 +30,7 @@ export default interface PropsType {
 
 export interface TreeNodePropsType {
   prefixCls?: string;
-  title?: string|ReactNode;
+  title?: string | ReactNode;
   keys: string;
   expanded?: boolean;
   checked?: boolean;
@@ -41,5 +41,5 @@ export interface TreeNodePropsType {
 
   onNodeExpand?(treeNode: TreeNode, targetExpanded: boolean, event: MouseEvent): void;
 
-  onNodeCheck?(treeNode: TreeNode, targetChecked: boolean, event: MouseEvent): void;
+  onNodeCheck?(treeNode: TreeNode, targetChecked: boolean, event: React.ChangeEvent<HTMLInputElement>): void;
 }

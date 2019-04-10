@@ -21,14 +21,13 @@ class Transfer extends Component<PropsType, any> {
     keyOfItem: '',
     displayNameOfItem: '',
 
-    onAdd: () => {},
-    onDoubleAdd: () => {},
-    onMinus: () => {},
-    onDoubleMinus: () => {},
-
+    onAdd: () => { },
+    onDoubleAdd: () => { },
+    onMinus: () => { },
+    onDoubleMinus: () => { },
   };
 
-  constructor(props) {
+  constructor(props: PropsType) {
     super(props);
     this.state = {
       initialValue: props.initialValue || [],
@@ -47,7 +46,7 @@ class Transfer extends Component<PropsType, any> {
     this.setState({
       initialValue,
       selectedValue,
-      selectedLeft:  [],
+      selectedLeft: [],
       selectedRight: [],
     });
     this.props.onAdd(selectedValue);
@@ -62,17 +61,18 @@ class Transfer extends Component<PropsType, any> {
     this.setState({
       initialValue,
       selectedValue,
-      selectedLeft:  [],
+      selectedLeft: [],
       selectedRight: [],
     });
     this.props.onMinus(selectedValue);
   }
 
-  _onDoubleAdd(e) {
+  _onDoubleAdd(e: React.MouseEvent) {
+    const target = e.target as HTMLDivElement;
     let initialValue = [...this.state.initialValue].filter(
-      item => (e.target.textContent !== item[this.props.displayNameOfItem]) && item);
+      item => (target.textContent !== item[this.props.displayNameOfItem]) && item);
     let selected = [...this.state.initialValue].filter(
-      item => (e.target.textContent === item[this.props.displayNameOfItem]) && item);
+      item => (target.textContent === item[this.props.displayNameOfItem]) && item);
     let selectedValue = this.state.selectedValue.concat(selected);
     this.setState({
       initialValue,
@@ -81,11 +81,12 @@ class Transfer extends Component<PropsType, any> {
     this.props.onDoubleAdd(selectedValue);
   }
 
-  _onDoubleMinus(e) {
+  _onDoubleMinus(e: React.MouseEvent) {
+    const target = e.target as HTMLDivElement;
     let selectedValue = [...this.state.selectedValue].filter(
-      item => (e.target.textContent !== item[this.props.displayNameOfItem]) && item);
+      item => (target.textContent !== item[this.props.displayNameOfItem]) && item);
     let selected = [...this.state.selectedValue].filter(
-      item => (e.target.textContent === item[this.props.displayNameOfItem]) && item);
+      item => (target.textContent === item[this.props.displayNameOfItem]) && item);
     let initialValue = this.state.initialValue.concat(selected);
     this.setState({
       initialValue,
@@ -94,7 +95,11 @@ class Transfer extends Component<PropsType, any> {
     this.props.onDoubleMinus(selectedValue);
   }
 
-  handleMultipleSelection(selectedRows, { index: currentIndex, value: currentValue }, operType) {
+  handleMultipleSelection(
+    selectedRows: string[],
+    { index: currentIndex, value: currentValue }: any,
+    operType: 'add' | 'minus',
+  ) {
     const len = selectedRows.length;
     const { keyOfItem } = this.props;
     const { initialValue, selectedValue } = this.state;
@@ -110,9 +115,10 @@ class Transfer extends Component<PropsType, any> {
           lastSelectedValue = selectedRows[len - 2];
         }
       }
-      let lastIndex;
+      let lastIndex: number = 0;
 
-      values.forEach((item, index) => {
+      // todo do not use any type
+      values.forEach((item: any, index: number) => {
         if (item[keyOfItem] === lastSelectedValue) {
           lastIndex = index;
         }
@@ -149,7 +155,7 @@ class Transfer extends Component<PropsType, any> {
     } = this.props;
 
     const disabled = 'disabled' in this.props || isDisabled;
-    const radius =  'radius' in this.props || isRadius;
+    const radius = 'radius' in this.props || isRadius;
 
     const cls = classnames({
       [prefixCls!]: true,
@@ -169,34 +175,36 @@ class Transfer extends Component<PropsType, any> {
             isDisabled={disabled}
             isRadius={radius}
             value={this.state.selectedLeft}
-            onChange={(selectedRows, row, shiftKey) => {
+            // todo do not use any type
+            onChange={(selectedRows: any, row: any, shiftKey: boolean) => {
               if (shiftKey) {
                 this.handleMultipleSelection(selectedRows, row, 'add');
                 return;
               }
               this.setState({ selectedLeft: selectedRows });
             }}
-            onDoubleClick={(e) => !disabled && this._onDoubleAdd(e)}
+            onDoubleClick={(e: React.MouseEvent) => !disabled && this._onDoubleAdd(e)}
           >
             {
-            this.state.initialValue.map((option, index) => {
+              // todo do not use any type
+              this.state.initialValue.map((option: any, index: number) => {
                 return (
-                <Select.Option key={index} value={option[keyOfItem]} >
-                      {option[displayNameOfItem]}
-                </Select.Option>
+                  <Select.Option key={index} value={option[keyOfItem]} >
+                    {option[displayNameOfItem]}
+                  </Select.Option>
                 );
-            })
+              })
             }
           </Select.Multiple>
         </div>
         <div className={prefixCls + '-action-bar'}>
           <div className="button-wrapper">
-          <Button disabled={this.state.selectedLeft.length === 0} onClick={() => !disabled && this._onAdd()}>
-          <Icon type="add"/>
-          </Button>
-          <Button disabled={this.state.selectedRight.length === 0} onClick={() => !disabled && this._onMinus()}>
-            <Icon type="minus" />
-          </Button>
+            <Button disabled={this.state.selectedLeft.length === 0} onClick={() => !disabled && this._onAdd()}>
+              <Icon type="add" />
+            </Button>
+            <Button disabled={this.state.selectedRight.length === 0} onClick={() => !disabled && this._onMinus()}>
+              <Icon type="minus" />
+            </Button>
           </div>
         </div>
         <div className={prefixCls + '-panel'}>
@@ -205,19 +213,21 @@ class Transfer extends Component<PropsType, any> {
             isDisabled={disabled}
             isRadius={radius}
             value={this.state.selectedRight}
-            onChange={(selectedRows, row, shiftKey) => {
+            // todo option should have type
+            onChange={(selectedRows: any, row: any, shiftKey: boolean) => {
               if (shiftKey) {
                 this.handleMultipleSelection(selectedRows, row, 'minus');
                 return;
               }
               this.setState({ selectedRight: selectedRows });
             }}
-            onDoubleClick={(e) => !disabled && this._onDoubleMinus(e)}
+            onDoubleClick={(e: React.MouseEvent) => !disabled && this._onDoubleMinus(e)}
           >
             {
-            this.state.selectedValue.map((option, index) => {
-            return (<Select.Option key={index} value={option[keyOfItem]}>{option[displayNameOfItem]}</Select.Option>);
-            })
+              // todo option should have type
+              this.state.selectedValue.map((option: any, index: number) => {
+                return (<Select.Option key={index} value={option[keyOfItem]}>{option[displayNameOfItem]}</Select.Option>);
+              })
             }
           </Select.Multiple>
         </div>
