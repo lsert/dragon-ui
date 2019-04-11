@@ -6,14 +6,8 @@ export interface GroupProps {
 }
 
 export default interface PropsType {
-  prefixCls?: string;
-  value?: string;
-  checked?: boolean;
+  prefixCls: string;
   defaultChecked?: boolean;
-  className?: string;
-  style?: object;
-  disabled?: boolean;
+  indeterminate: boolean;
   isDisabled?: boolean;
-  indeterminate?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

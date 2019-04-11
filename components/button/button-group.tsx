@@ -1,18 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { ButtonGroupProps } from './PropsType';
 
-const ButtonGroup: React.SFC<ButtonGroupProps> = props => {
+const ButtonGroup: React.SFC<React.HTMLProps<HTMLDivElement> & ButtonGroupProps> = props => {
   const { prefixCls = 'za-btn-group', size, className, ...others } = props;
-
   const cls = classNames(
     prefixCls,
-    {
-      [`${prefixCls}--${size}`]: size,
-    },
+    { [`${prefixCls}--${size}`]: size },
     className,
   );
-
   return <div {...others} className={cls} />;
 };
 

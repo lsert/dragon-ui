@@ -1,11 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ButtonProps from './PropsType';
 import Icon from '../icon';
+import ButtoGroup from './button-group';
 
-class Button extends Component<ButtonProps, any> {
-  static Group;
+interface ButtonTypeIF {
+  button: ButtonHTMLAttributes<HTMLButtonElement> & ButtonProps;
+  anchor: AnchorHTMLAttributes<HTMLAnchorElement> & ButtonProps;
+}
+
+function isAnchorProps(props: Button<'anchor'>['props'] | Button<'button'>['props']): props is Button<'anchor'>['props'] {
+  return props.hasOwnProperty('href');
+}
+
+class Button<T extends keyof ButtonTypeIF = 'button'> extends Component<ButtonTypeIF[T], {}> {
+  static Group: typeof ButtoGroup = ButtoGroup;
   static defaultProps = {
     prefixCls: 'za-button',
     htmlType: 'button',
@@ -14,8 +24,8 @@ class Button extends Component<ButtonProps, any> {
     ghost: false,
     size: null,
     block: false,
-    onClick: () => {},
   };
+
   static propTypes = {
     type: PropTypes.string,
     shape: PropTypes.oneOf(['circle', 'round', 'rect', 'radius']),
@@ -27,10 +37,20 @@ class Button extends Component<ButtonProps, any> {
     block: PropTypes.bool,
   };
 
-  render () {
+  onClick = (event: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLButtonElement>) => {
+    const { disabled, loading, onClick } = this.props;
+    if (disabled || loading) {
+      return;
+    }
+    if (onClick) {
+      (onClick as (e: typeof event) => void)(event);
+    }
+  }
+
+  render() {
     const {
-      prefixCls, htmlType, type, size, block, shape, active, focus, disabled, ghost,
-      loading, className, onClick, children, style, theme, href, target, icon, ...others
+      prefixCls, size, block, shape, active, focus, disabled, ghost,
+      loading, className, onClick, children, style, theme, icon, ...others
     } = this.props;
 
     const classes = classnames({
@@ -54,36 +74,31 @@ class Button extends Component<ButtonProps, any> {
     const textContent =
       loading ? (
         <React.Fragment>
-          <Icon type="loading" className="rotate360"/>&nbsp;&nbsp;{children}
+          <Icon type="loading" className="rotate360" />&nbsp;&nbsp;{children}
         </React.Fragment>
-      ) : (
-        children
-      );
+      ) : (children);
 
-    return (
-      href
-        ? <a
+    const { props } = this;
+    if (isAnchorProps(props)) {
+      return (
+        <a
           className={classes}
-          href={href}
-          style={style}
-          target={target}
           {...others}
-          onClick={e => (!disabled && !loading) && onClick!(e)}
+          onClick={this.onClick}
         >
           {textContent}
         </a>
-        : (
-          <button
-            type={htmlType}
-            className={classes}
-            style={style}
-            disabled={disabled}
-            onClick={e => (!disabled && !loading) && onClick!(e)}
-            {...others}
-          >
-            {textContent}
-          </button>
-        )
+      );
+    }
+
+    return (
+      <button
+        className={classes}
+        disabled={disabled}
+        {...others}
+      >
+        {textContent}
+      </button>
     );
   }
 }

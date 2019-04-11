@@ -1,18 +1,19 @@
-import React, { Component, cloneElement, ReactElement } from 'react';
+import React, { Component, cloneElement, ReactElement, HTMLProps } from 'react';
 import classnames from 'classnames';
 import { PropsType } from './PropsType';
+import BreadcrumbItem from './BreadcrumbItem';
 
-class Breadcrumb extends Component<PropsType, any> {
+class Breadcrumb extends Component<HTMLProps<HTMLDivElement> & PropsType, {}> {
   static defaultProps = {
     prefixCls: 'ui-breadcrumb',
     separator: '/',
   };
 
-  static Item;
+  static Item: typeof BreadcrumbItem = BreadcrumbItem;
 
   render() {
     const {
-      className, separator, children, style,
+      className, separator, children, ...others
     } = this.props;
 
     const cls = classnames({
@@ -29,7 +30,7 @@ class Breadcrumb extends Component<PropsType, any> {
     });
 
     return (
-      <div className={cls} style={style}>
+      <div className={cls} {...others}>
         {items}
       </div>
     );

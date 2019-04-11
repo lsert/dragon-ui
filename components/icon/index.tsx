@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, HTMLAttributes } from 'react';
 import classnames from 'classnames';
 import IconProps from './PropsType';
 
-class Icon extends Component<IconProps, any> {
+class Icon extends Component<HTMLAttributes<HTMLElement> & IconProps, any> {
   static defaultProps = {
     prefixCls: 'za-icon',
     type: '',
@@ -14,7 +14,7 @@ class Icon extends Component<IconProps, any> {
 
   render() {
     const {
-      prefixCls, type, theme, className, style, onClick,
+      prefixCls, type, theme, className, ...others
     } = this.props;
     const cls = classnames({
       [prefixCls!]: true,
@@ -23,7 +23,7 @@ class Icon extends Component<IconProps, any> {
       [className!]: !!className,
     });
 
-    return <i className={cls} style={style} onClick={onClick} />;
+    return <i className={cls} {...others} />;
   }
 }
 

@@ -1,14 +1,14 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, ReactNode, isValidElement } from 'react';
 import Checkbox from './Checkbox';
-import { GroupProps } from './PropsType';
+import CheckboxProps, { GroupProps } from './PropsType';
 
 class CheckboxGroup extends Component<GroupProps, any> {
   static defaultProps = {
     prefixCls: 'za-checkbox-group',
-    onChange: () => {},
+    onChange: () => { },
   };
 
-  constructor(props) {
+  constructor(props: CheckboxGroup['props']) {
     super(props);
     this.state = {
       value:
@@ -18,7 +18,7 @@ class CheckboxGroup extends Component<GroupProps, any> {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: this['props']) {
     if ('value' in nextProps || this.getCheckedValue(nextProps.children)) {
       this.setState({
         value: nextProps.value || this.getCheckedValue(nextProps.children),
@@ -29,18 +29,24 @@ class CheckboxGroup extends Component<GroupProps, any> {
   render() {
     const { props } = this;
 
-    const children = React.Children.map(props.children, checkbox => (
-      <Checkbox
-        {...(checkbox as ReactElement<any>).props}
-        onChange={e => this.onCheckboxChange(e)}
-        checked={!!(this.state.value.indexOf((checkbox as ReactElement<any>).props.value) > -1)}
-      />
-    ));
+    const children = React.Children.map(props.children, checkbox => {
+      if (!isValidElement(checkbox)) {
+        return null;
+      }
+      const props = (checkbox).props as CheckboxProps;
+      return (
+        <Checkbox
+          onChange={this.onCheckboxChange}
+          checked={!!(this.state.value.indexOf((checkbox as ReactElement<any>).props.value) > -1)}
+          {...props}
+        />
+      );
+    });
 
     return <div className={props.prefixCls}>{children}</div>;
   }
 
-  getCheckedValue(children) {
+  getCheckedValue(children: ReactNode) {
     const checkedValue: ReactElement<any>[] = [];
     React.Children.forEach(children, (checkbox) => {
       if ((checkbox as ReactElement<any>).props && (checkbox as ReactElement<any>).props.checked) {
@@ -50,7 +56,7 @@ class CheckboxGroup extends Component<GroupProps, any> {
     return checkedValue;
   }
 
-  onCheckboxChange(e) {
+  onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = this.state;
     const index = value.indexOf(e.target.value);
 
