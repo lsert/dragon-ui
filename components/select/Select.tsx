@@ -109,7 +109,7 @@ class Select extends Component<PropsType, StateProps> {
     return [optionMap, optionData];
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: this['props']) {
     if ('value' in nextProps || nextProps.defaultValue !== this.props.defaultValue) {
       let value = nextProps.value === undefined ? nextProps.defaultValue : nextProps.value;
       if (nextProps.multiple) {
@@ -138,11 +138,11 @@ class Select extends Component<PropsType, StateProps> {
     this.unbindOuterHandlers();
   }
 
-  onOptionChange(_: React.MouseEvent, props, index) {
+  onOptionChange(_: React.MouseEvent, props: Option['props'], index: number) {
     if ('disabled' in props || props.isDisabled) {
       return;
     }
-    if (props.search || props.isSearch) {
+    if (this.props.search) {
       this.setState({
         searchValue: '',
       });
@@ -194,7 +194,7 @@ class Select extends Component<PropsType, StateProps> {
     this.inputWithTags = e;
   }
 
-  setDropdown(isOpen, callback?) {
+  setDropdown(isOpen: boolean, callback?: () => void) {
     this.setState(
       {
         dropdown: isOpen,
@@ -232,18 +232,18 @@ class Select extends Component<PropsType, StateProps> {
     });
   }
 
-  handleKeyup(e) {
+  handleKeyup = (e: KeyboardEvent) => {
     if (this.state.dropdown === true && e.keyCode === 27) {
       this.setDropdown(false);
     }
   }
 
   bindOuterHandlers() {
-    Events.on(document, 'keyup', e => this.handleKeyup(e));
+    Events.on(document, 'keyup', this.handleKeyup);
   }
 
   unbindOuterHandlers() {
-    Events.off(document, 'keyup', e => this.handleKeyup(e));
+    Events.off(document, 'keyup', this.handleKeyup);
   }
 
   onDeleteTag = (_e, _key, _value, index) => {

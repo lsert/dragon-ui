@@ -4,6 +4,7 @@ export type size = 'xl' | 'lg' | 'sm' | 'xs';
 export interface OptionProps {
   value: string | number;
   checked?: boolean;
+  isDisabled?: boolean;
   disabled?: boolean;
   showCheckIcon?: boolean;
   style?: CSSProperties;
