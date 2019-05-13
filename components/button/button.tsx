@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ButtonProps from './PropsType';
 import Icon from '../icon';
+import ButtonGroup from './button-group';
 
 class Button extends Component<ButtonProps, any> {
-  static Group;
+  static Group = ButtonGroup;
   static defaultProps = {
     prefixCls: 'za-button',
     htmlType: 'button',
@@ -14,7 +15,7 @@ class Button extends Component<ButtonProps, any> {
     ghost: false,
     size: null,
     block: false,
-    onClick: () => {},
+    onClick: () => { },
   };
   static propTypes = {
     type: PropTypes.string,
@@ -28,7 +29,7 @@ class Button extends Component<ButtonProps, any> {
     block: PropTypes.bool,
   };
 
-  render () {
+  render() {
     const {
       prefixCls, htmlType, type, size, block, shape, active, focus, disabled, ghost,
       loading, className, onClick, children, style, theme, href, target, icon, ...others
@@ -55,11 +56,11 @@ class Button extends Component<ButtonProps, any> {
     const textContent =
       loading ? (
         <React.Fragment>
-          <Icon type="loading" className="rotate360"/>&nbsp;&nbsp;{children}
+          <Icon type="loading" className="rotate360" />&nbsp;&nbsp;{children}
         </React.Fragment>
       ) : (
-        children
-      );
+          children
+        );
 
     return (
       href
