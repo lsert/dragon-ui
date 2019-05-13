@@ -278,7 +278,7 @@ class Calendar extends Component<PropsType, any> {
             {
               showTime && (
                 <Button
-                  type="primary"
+                  theme="primary"
                   size="xs"
                   style={{ float: 'right' }}
                   onClick={() => this.onConfirmClick(value)}

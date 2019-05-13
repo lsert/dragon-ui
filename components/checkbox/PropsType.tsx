@@ -1,8 +1,12 @@
+import { ReactElement } from 'react';
+import Checkbox from './Checkbox';
+
 export interface GroupProps {
   prefixCls?: string;
   value?: string;
   defaultValue?: string;
   onChange: (e: any) => void;
+  children: ReactElement<Checkbox['props'], typeof Checkbox> | Array<ReactElement<Checkbox['props'], typeof Checkbox>>;
 }
 
 export default interface PropsType {
@@ -15,5 +19,5 @@ export default interface PropsType {
   disabled?: boolean;
   isDisabled?: boolean;
   indeterminate?: boolean;
-  onChange: (e: any) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
