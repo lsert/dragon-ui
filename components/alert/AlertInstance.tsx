@@ -1,22 +1,23 @@
 import React from 'react';
 import Alert from './Alert';
 import ReactDOM from 'react-dom';
+
 let div = document.createElement('div');
 let visible = false;
 
 class AlertExtension extends Alert {
-  static defalut(option: any) {
+  static defalut(option: Alert['props']) {
     document.body.appendChild(div);
-    let defalutValue = {
+    let defalutValue: Alert['props'] = {
       width: 270,
-      message: 'hello world',
+      message: '',
       closeText: '关闭',
       hideIcon: false,
-      theme: 'info',
+      theme: 'primary',
       closable: true,
-      onClose: () => {},
+      onClose: () => { },
     };
-    let object;
+    let object: Alert['props'];
     if (option) {
       object = Object.assign(defalutValue, option);
     } else {
@@ -42,7 +43,7 @@ class AlertExtension extends Alert {
       div,
     );
   }
-  static show(object) {
+  static show(object: Alert['props']) {
     visible = true;
     this.defalut(object);
   }
