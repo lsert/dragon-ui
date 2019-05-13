@@ -1,6 +1,7 @@
 import React, { Component, cloneElement, ReactElement } from 'react';
 import classnames from 'classnames';
 import { PropsType } from './PropsType';
+import BreadcrumbItem from './BreadcrumbItem';
 
 class Breadcrumb extends Component<PropsType, any> {
   static defaultProps = {
@@ -8,7 +9,7 @@ class Breadcrumb extends Component<PropsType, any> {
     separator: '/',
   };
 
-  static Item;
+  static Item = BreadcrumbItem;
 
   render() {
     const {
