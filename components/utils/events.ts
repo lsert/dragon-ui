@@ -1,26 +1,28 @@
 export default {
-  on(el, type, callback) {
+  on(el: EventTarget, type: string, callback: EventListener) {
     if (el.addEventListener) {
       el.addEventListener(type, callback, { passive: false });
     } else {
-      el.attachEvent(`on ${type}`, () => {
-        callback.call(el);
+      (el as any).attachEvent(`on ${type}`, () => {
+        (callback as () => void).call(el);
       });
     }
   },
 
-  off(el, type, callback) {
+  off(el: EventTarget, type: string, callback: EventListener) {
     if (el.removeEventListener) {
-      el.removeEventListener(type, callback, { passive: false });
+      el.removeEventListener(type, callback, { passive: false } as any);
     } else {
-      el.detachEvent(`off ${type}`, callback);
+      (el as any).detachEvent(`off ${type}`, callback);
     }
   },
 
-  once(el, type, callback) {
+  once(el: EventTarget, type: string, callback: EventListener) {
     const typeArray = type.split(' ');
-    const recursiveFunction = (e) => {
-      e.target.removeEventListener(e.type, recursiveFunction, { passive: false });
+    const recursiveFunction = (e: Event) => {
+      if (e.target) {
+        e.target.removeEventListener(e.type, recursiveFunction, { passive: false } as any);
+      }
       return callback(e);
     };
 

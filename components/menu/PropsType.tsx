@@ -29,8 +29,8 @@ export interface ItemProps {
   inlineIndent: number;
   itemKey: string;
   onClick: (e: React.MouseEvent, itemKey: string) => void;
-  toggleSelectedKeys: (itemKey: string) => void;
-  toggleSubMenuOpen: (itemKey: string) => void;
+  toggleSelectedKeys?: (itemKey: string) => void;
+  toggleSubMenuOpen?: (itemKey: string) => void;
   onDoubleClick?: () => void;
 }
 
@@ -41,7 +41,7 @@ export type DividerProps = {
 };
 
 export interface SubMenuProps {
-  prefixCls?: string;
+  prefixCls: string;
   level: number;
   inlineIndent: number;
   mode: 'inline' | 'horizontal';
@@ -52,7 +52,7 @@ export interface SubMenuProps {
   itemKey?: any;
   subMenuKey: string;
   openKeys: string[];
-  toggleOpenKeys: (subMenyKey: string) => void;
+  toggleOpenKeys?: (subMenyKey: string) => void;
 }
 
 export default interface PropsType {

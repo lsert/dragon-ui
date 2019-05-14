@@ -65,7 +65,7 @@
     "@types/enzyme-to-json": "^1.5.0",
     "@types/jest": "^21.1.5",
     "@types/react": "^16.8.17",
-    "@types/react-dom": "^16.0.2",
+    "@types/react-dom": "^16.8.4",
     "autoprefixer": "^6.7.7",
     "awesome-typescript-loader": "^5.2.1",
     "babel-cli": "^6.24.1",

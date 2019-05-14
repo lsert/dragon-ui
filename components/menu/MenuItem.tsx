@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEventHandler } from 'react';
 import classnames from 'classnames';
 import Tooltip from '../tooltip';
 import { ItemProps, styleType } from './PropsType';
@@ -18,12 +18,16 @@ class MenuItem extends Component<ItemProps, any> {
     onDoubleClick: noop,
   };
 
-  handleClick = (e) => {
-    const { itemKey, inlineCollapsed } = this.props;
+  handleClick: MouseEventHandler<HTMLLIElement> = (e) => {
+    const { itemKey, inlineCollapsed, toggleSelectedKeys, toggleSubMenuOpen } = this.props;
     this.props.onClick(e, itemKey);
-    this.props.toggleSelectedKeys(itemKey);
+    if (toggleSelectedKeys) {
+      toggleSelectedKeys(itemKey);
+    }
     if (inlineCollapsed) {
-      this.props.toggleSubMenuOpen('');
+      if (toggleSubMenuOpen) {
+        toggleSubMenuOpen('');
+      }
     }
   }
 
@@ -68,7 +72,7 @@ class MenuItem extends Component<ItemProps, any> {
   }
 }
 
-export default function MenuItemConsumer (props) {
+export default function MenuItemConsumer(props: MenuItem['props']) {
   return (
     <MenuContext.Consumer>
       {

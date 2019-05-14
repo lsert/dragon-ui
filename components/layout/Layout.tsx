@@ -1,18 +1,32 @@
 import React, { Component, Children, ReactElement } from 'react';
 import classnames from 'classnames';
 import PropsType from './PropsType';
+import Sider from './Sider';
+
+const genSubComponent = (props: PropsType) => {
+  return class SubComponent extends Component<PropsType, any> {
+    render() {
+      const { prefixCls } = props;
+      return <Layout prefixCls={prefixCls} {...this.props} />;
+    }
+  };
+};
+
+const Header = genSubComponent({ prefixCls: 'ui-layout-header' });
+const Content = genSubComponent({ prefixCls: 'ui-layout-content' });
+const Footer = genSubComponent({ prefixCls: 'ui-layout-footer' });
 
 const defaultPrefixCls = 'ui-layout';
-class Layout extends Component<PropsType, any> {
+class Layout extends Component<PropsType, {}> {
   static defaultProps = {
     prefixCls: defaultPrefixCls,
     hasSider: false,
   };
 
-  static Header: any;
-  static Sider: any;
-  static Footer: any;
-  static Content: any;
+  static Header = Header;
+  static Sider = Sider;
+  static Footer = Footer;
+  static Content = Content;
 
   render() {
     const { prefixCls, className, children, style } = this.props;
@@ -37,22 +51,5 @@ class Layout extends Component<PropsType, any> {
     );
   }
 }
-
-const genSubComponent = (props: PropsType) => {
-  return class SubComponent extends Component<PropsType, any> {
-    render() {
-      const { prefixCls } = props;
-      return <Layout prefixCls={prefixCls} {...this.props} />;
-    }
-  };
-};
-
-const Header = genSubComponent({ prefixCls: 'ui-layout-header' });
-const Content = genSubComponent({ prefixCls: 'ui-layout-content' });
-const Footer = genSubComponent({ prefixCls: 'ui-layout-footer' });
-
-Layout.Header = Header;
-Layout.Footer = Footer;
-Layout.Content = Content;
 
 export default Layout;

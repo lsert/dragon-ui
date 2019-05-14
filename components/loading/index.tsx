@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropsType from './PropsType';
 
-class Loading extends Component<PropsType, any> {
+class Loading extends Component<PropsType, {}> {
   static defaultProps = {
     prefixCls: 'ui-loading',
     visible: false,
   };
 
   render() {
-    const { visible, children, style, prefixCls } = this.props;
+    const { visible, children, prefixCls, ...others } = this.props;
     return (
-      <div className={prefixCls} style={style}>
+      <div className={prefixCls} {...others}>
         <div className={`${prefixCls}-spins`} style={{ display: (visible ? 'block' : 'none') }}>
           <span className={`${prefixCls}-spin ${prefixCls}-spin-first`} />
           <span className={`${prefixCls}-spin ${prefixCls}-spin-second`} />

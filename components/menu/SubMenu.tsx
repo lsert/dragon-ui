@@ -1,11 +1,16 @@
-import React, { Component, Children, cloneElement, ReactElement } from 'react';
+import React, { Component, Children, cloneElement, ReactElement, MouseEventHandler, InsHTMLAttributes } from 'react';
 import classnames from 'classnames';
 import dom from '../utils/dom';
 import events from '../utils/events';
 import { SubMenuProps, styleType, childPropsType } from './PropsType';
 import MenuContext from './menu-context';
 
-export class SubMenu extends Component<SubMenuProps, any> {
+interface StateIF {
+  collapsedSubVisible: boolean;
+  collapsedSubAnimation: string;
+}
+
+export class SubMenu extends Component<SubMenuProps, StateIF> {
   static defaultProps = {
     prefixCls: 'za-menu',
     title: '',
@@ -18,19 +23,17 @@ export class SubMenu extends Component<SubMenuProps, any> {
   sub: any;
   timeout: any;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsedSubVisible: false,
-      collapsedSubAnimation: '',
-    };
-  }
+  state: StateIF = {
+    collapsedSubVisible: false,
+    collapsedSubAnimation: '',
+  };
 
   componentDidMount() {
     const { openKeys, inlineCollapsed } = this.props;
     if (openKeys.length > 0) {
       if (!inlineCollapsed) {
-        this.setSubHeight({ openKeys: [] });
+        const newOpenKeys: string[] = [];
+        this.setSubHeight({ openKeys: newOpenKeys });
       }
     }
     if (inlineCollapsed) {
@@ -38,7 +41,7 @@ export class SubMenu extends Component<SubMenuProps, any> {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: this['props']) {
     const { inlineCollapsed } = nextProps;
 
     if (!inlineCollapsed) {
@@ -63,7 +66,7 @@ export class SubMenu extends Component<SubMenuProps, any> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: this['props']) {
     const { inlineCollapsed } = this.props;
     if (!inlineCollapsed) {
       this.setSubHeight(prevProps);
@@ -77,11 +80,12 @@ export class SubMenu extends Component<SubMenuProps, any> {
     }
   }
 
-  toggleSubMenuOpen = (e) => {
+  toggleSubMenuOpen: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
-    const { subMenuKey } = this.props;
-
-    this.props.toggleOpenKeys(subMenuKey);
+    const { subMenuKey, toggleOpenKeys } = this.props;
+    if (toggleOpenKeys) {
+      toggleOpenKeys(subMenuKey);
+    }
   }
 
   renderChildren() {
@@ -124,7 +128,7 @@ export class SubMenu extends Component<SubMenuProps, any> {
     return height;
   }
 
-  setSubHeight(prevProps) {
+  setSubHeight(prevProps: Pick<this['props'], 'openKeys'>) {
     if (!this.sub) {
       return;
     }
@@ -174,14 +178,16 @@ export class SubMenu extends Component<SubMenuProps, any> {
     });
   }
 
-  onClickOutSide = (e) => {
+  onClickOutSide: EventListener = (e) => {
     const { target } = e;
-    const { subMenuKey, openKeys } = this.props;
+    const { subMenuKey, openKeys, toggleOpenKeys } = this.props;
     if (this.subTitle.contains(target)) {
       return;
     }
     if (!this.sub.contains(target) && openKeys.indexOf(subMenuKey) > -1) {
-      this.props.toggleOpenKeys(subMenuKey);
+      if (toggleOpenKeys) {
+        toggleOpenKeys(subMenuKey);
+      }
     }
   }
 
@@ -238,7 +244,7 @@ export class SubMenu extends Component<SubMenuProps, any> {
   }
 }
 
-export default function SubMenuConsumer(props) {
+export default function SubMenuConsumer(props: SubMenu['props']) {
   return (
     <MenuContext.Consumer>
       {

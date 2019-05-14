@@ -3,6 +3,9 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import PropsType, { childPropsType } from './PropsType';
 import MenuContext, { menuKeys, keysType } from './menu-context';
+import { SubMenu } from './SubMenu';
+import MenuItem from './MenuItem';
+import Divider from './Divider';
 
 class Menu extends Component<PropsType, any> {
   static defaultProps = {
@@ -19,14 +22,14 @@ class Menu extends Component<PropsType, any> {
     siderCollapsed: PropTypes.bool,
   };
 
-  static SubMenu;
-  static Item;
-  static Divider;
+  static SubMenu = SubMenu;
+  static Item = MenuItem;
+  static Divider = Divider;
 
   menuKeys: any;
   inlineOpenKeys: string[] = [];
 
-  constructor(props) {
+  constructor(props: Menu['props']) {
     super(props);
     const { defaultOpenKeys, defaultSelectedKeys } = props;
     this.state = {
@@ -39,7 +42,7 @@ class Menu extends Component<PropsType, any> {
     this.menuKeys.toggleOpenKeys = this.toggleOpenKeys;
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps: Menu['props']) {
     if (
       (nextProps.inlineCollapsed && !this.props.inlineCollapsed)
     ) {
@@ -59,7 +62,7 @@ class Menu extends Component<PropsType, any> {
     }
   }
 
-  toggleSelectedKeys = (itemKey) => {
+  toggleSelectedKeys = (itemKey: string) => {
     if (!('selectedKeys' in this.props)) {
       this.setState({
         selectedKeys: [itemKey],
@@ -67,7 +70,7 @@ class Menu extends Component<PropsType, any> {
     }
   }
 
-  toggleOpenKeys = (subMenuKey) => {
+  toggleOpenKeys = (subMenuKey: string) => {
     const { openKeys } = this.state;
     const { onOpenChange, inlineCollapsed } = this.props;
     const newOpenKeys = [...openKeys];
