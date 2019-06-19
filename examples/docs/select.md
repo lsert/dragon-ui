@@ -18,25 +18,6 @@
     this.ref = React.createRef();
   }
   componentDidMount(){
-    setTimeout(()=>{
-      // mock async data
-      this.setState({
-        data: [
-          {
-            value: '',
-            text: '全部',
-          },
-          {
-            value: 'a',
-            text: '我是A'
-          },
-          {
-            value: 'b',
-            text: '我是B'
-          }
-        ]
-      });
-    }, 1000);
   }
   render() {
     const { data } = this.state;
@@ -45,6 +26,9 @@
         <Select
           style={{ width: 200 }}
           ref={this.ref}
+          options={[
+            {value:"123", children:'你好啊'},
+          ]}
           onChange={(data) => {
             console.log(data);
             this.setState({

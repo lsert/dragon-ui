@@ -1,4 +1,6 @@
 import { CSSProperties, MouseEvent, ReactNode, LiHTMLAttributes, HTMLProps } from 'react';
+import Option from './Option';
+
 export type size = 'xl' | 'lg' | 'sm' | 'xs';
 
 export interface OptionProps extends LiHTMLAttributes<HTMLLIElement> {
@@ -58,5 +60,7 @@ export default interface PropsType {
   locale?: {
     [propName: string]: any,
   };
+  options?: OptionProps[];
   getPopupContainer?(): HTMLElement;
+
 }

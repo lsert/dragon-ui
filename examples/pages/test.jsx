@@ -1,54 +1,32 @@
 import React from 'react';
-import Dropdown from '../../components/dropdown';
-import '../../components/dropdown/style';
+import Select from '../../components/select';
+import '../../components/select/style';
 
 export default class Test extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,
+      options: [
+        {
+          type: 'optionGroup',
+          label: '这是第一分队',
+          children: [
+            { value: '1', children: '这是1' },
+            { value: '2', children: '这是2' },
+            { value: '3', children: '这是3' },
+          ],
+        },
+        { value: '4', children: '这是4' },
+        { value: '5', children: '这是5' },
+        { value: '6', children: '这是6' },
+        { value: '7', children: '这是7' },
+      ],
     };
   }
 
   render() {
-    const dom = (
-      <div style={{ width: 50 }}>
-        123112
-        <br />
-        12311231
-        <br />
-        qweq
-        123112
-        <br />
-        12311231
-        <br />
-        qweq
-        123112
-        <br />
-        12311231
-        <br />
-        qweq
-        123112
-        <br />
-        12311231
-        <br />
-        qweq
-      </div>
-    );
     return (
-      <div style={{ width: 200, height: 100, overflow: 'auto' }}>
-        <Dropdown
-          onVisibleChange={(visible) => {
-            this.setState({
-              visible,
-            });
-          }}
-          overlay={dom}
-          visible={this.state.visible}
-        >
-          <div style={{ whiteSpace: 'nowrap' }}>点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里点击这里</div>
-        </Dropdown>
-      </div >
+      <Select clearable options={this.state.options} />
     );
   }
 }

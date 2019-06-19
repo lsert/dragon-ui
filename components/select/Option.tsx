@@ -21,8 +21,8 @@ class Option extends PureComponent<OptionProps, any> {
 
     const cls = cn({
       [`${className}`]: !!className,
-      'checked': checked,
-      'disabled': isDisabled || disabled,
+      disabled: isDisabled || disabled,
+      checked,
     });
     return (
       <Menu.Item
