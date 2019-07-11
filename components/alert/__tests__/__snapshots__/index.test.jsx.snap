@@ -15,9 +15,13 @@ exports[`Alert renders basic Alert correctly 1`] = `
     visible={true}
   >
     <AlertExtension
-      className=""
       closable={true}
       hideIcon={false}
+      local={
+        Object {
+          "close": "关闭",
+        }
+      }
       locale={
         Object {
           "close": "关闭",
@@ -34,7 +38,6 @@ exports[`Alert renders basic Alert correctly 1`] = `
       <Modal
         animationDuration={300}
         animationType="zoom"
-        className=""
         minWidth={270}
         onMaskClick={[Function]}
         prefixCls="zw-modal"

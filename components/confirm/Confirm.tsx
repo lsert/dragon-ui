@@ -25,13 +25,13 @@ class Confirm extends Component<PropsType, any> {
     }
   };
 
-  onOk = (e: MouseEvent) => {
+  onOk = (e: MouseEvent<HTMLButtonElement>) => {
     if (this.props.onOk) {
       this.props.onOk(e);
     }
   };
 
-  onKeyPress:KeyboardEventHandler<HTMLDivElement> = (e) => {
+  onKeyPress: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.keyCode === 13) {
       if (this.props.onOk) {
         this.props.onOk(e);

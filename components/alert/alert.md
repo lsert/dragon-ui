@@ -1,13 +1,15 @@
-## Alert 警告框
+# Alert 警告框
 
 用于展示重要的提示信息。
 
-### 基本用法
+## 基本用法
 
 弹窗形式，默认有一个关闭按钮。
+demo Alert 组件提供四种主题，由`theme`属性指定，默认值为`info`。通过`message`属性设置显示文本，默认带icon。
+```jsx
+import { Alert, Button } from 'zarm-web';
 
-::: demo Alert 组件提供四种主题，由`theme`属性指定，默认值为`info`。通过`message`属性设置显示文本，默认带icon。
-```js
+class Demo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,15 +49,18 @@
       </div>
     );
   }
+}
+ReactDOM.render(<Demo />, mountNode);
 ```
-:::
 
-### 自定义关闭按钮
+## 自定义关闭按钮
 
 自定义关闭按钮的几种用法。
 
 ::: demo 可以设置是否可关闭，关闭按钮的文本以及关闭时的回调函数。`closable`属性决定是否可关闭，默认为`true`。另外可以设置`closeText`来替代默认的'关闭'文本。设置`onClose`事件来设置关闭时的回调，通过`visible`属性来控制弹窗的显示和隐藏。
-```js
+```jsx
+import { Alert, Button } from 'zarm-web';
+class Demo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -109,6 +114,9 @@
       </div>
     );
   }
+}
+
+ReactDOM.render(<Demo />, mountNode);
 ```
 :::
 
@@ -117,7 +125,9 @@
 根据业务需要可隐藏表示状态的icon。
 
 ::: demo 通过设置`hideIcon`属性来隐藏 icon。
-```js
+```jsx
+import { Alert, Button } from 'zarm-web';
+class Demo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -154,15 +164,20 @@
       </div>
     );
   }
+}
+
+ReactDOM.render(<Demo />, mountNode);
 ```
 :::
 
-###  命令式方式调用
+##  命令式方式调用
 
 根据业务需要添加命令式调用
 
 ::: demo 通过调用`Alert.show(object)`来显示Alert。
-```js
+```jsx
+import { Alert, Button } from 'zarm-web';
+class Demo extends React.Component {
   render() {
     return (
       <div>
@@ -176,13 +191,16 @@
       </div>
     );
   }
+}
+
+ReactDOM.render(<Demo />, mountNode);
 ```
-:::
 
 
-### Attributes
-| 参数      | 说明          | 类型      | 可选值                           | 默认值  |
-|---------- |-------------- |---------- |--------------------------------  |-------- |
+## Attributes
+
+| 参数      | 说明  | 类型    | 可选值  | 默认值  |
+| :--- | :--- | :--- | :--- | :--- |
 | message | 内容文本 | string | — | '' |
 | theme | 主题 | string | success/warning/info/error | info |
 | width | 弹窗宽度 | number | — | 270 |
@@ -190,9 +208,5 @@
 | closable | 是否可关闭 | boolean | — | true |
 | closeText | 关闭按钮自定义文本 | string | — | — |
 | hideIcon | 是否隐藏图标 | boolean | — | false |
-
-
-### Events
 | 事件名称 | 说明 | 回调参数 |
-|---------- |-------- |---------- |
 | onClose | 关闭alert时触发的事件 | — |

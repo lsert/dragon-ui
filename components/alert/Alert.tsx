@@ -3,16 +3,17 @@ import Modal from '../modal';
 import Button from '../button';
 import Icon from '../icon';
 import AlertProps from './PropsType';
-
 import zhCn from '../locale/lang/zh-cn';
 
-class Alert extends Component<AlertProps, any> {
+interface PropsTypeIF extends AlertProps {
+  locale: typeof zhCn.Alert;
+}
+
+class Alert extends Component<PropsTypeIF> {
   static defaultProps = {
     prefixCls: 'ui-alert',
     theme: 'primary',
-    message: '',
     width: 270,
-    className: '',
     hideIcon: false,
     closable: true,
     local: zhCn.Alert,

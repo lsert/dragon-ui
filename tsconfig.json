@@ -8,7 +8,6 @@
     "allowSyntheticDefaultImports": true,
     "target": "es6",
     "skipLibCheck": true,
-    "strict": true,
     "types": [
       "classnames",
       "react",

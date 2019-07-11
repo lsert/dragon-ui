@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, KeyboardEvent } from 'react';
 
 export default interface PropsType {
   prefixCls?: string;
@@ -12,6 +12,6 @@ export default interface PropsType {
     confirm: string;
     cancel: string;
   };
-  onOk?: (e: MouseEvent | KeyboardEvent) => void;
+  onOk?: (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLDivElement>) => void;
   onCancel?: () => void;
 }
