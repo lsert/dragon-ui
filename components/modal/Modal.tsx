@@ -219,7 +219,7 @@ class Modal extends Component<PropsIF, StateIF> {
     if (this.state.isShow && this.state.animationState !== 'leave') {
       if (e.keyCode === 27) {
         React.Children.forEach(this.props.children, (elem: ReactNode) => {
-          if (isValidElement(elem)) {
+          if (isValidElement<ModalHeaderProps>(elem)) {
             if (elem.props.onClose) {
               elem.props.onClose();
             }
