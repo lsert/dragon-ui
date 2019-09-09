@@ -1,12 +1,13 @@
-type placement = 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'topLeft' | 'topCenter' | 'topRight';
+import { ReactNode } from "react";
+
+type direction = 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'topLeft' | 'topCenter' | 'topRight';
 export type trigger = 'click' | 'hover' | 'contextMenu';
 
 interface BasicPropsType {
   prefixCls?: string;
   visible?: boolean;
-  overlay?: React.ReactElement<any>;
-  placement?: placement;
-  className?: string;
+  content?: ReactNode;
+  direction?: direction;
   radius?: boolean;
   isRadius?: boolean;
   triggerBoxStyle?: React.CSSProperties;
