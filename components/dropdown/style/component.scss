@@ -4,12 +4,12 @@
   }
 }
 
-.ui-dropdown-trigger-box {
+.zw-dropdown-trigger-box {
   display: inline-block;
   vertical-align: middle;
 }
 
-.ui-dropdown {
+.zw-dropdown {
   @include dropdown-size($base-radius);
 
   min-width: 100%;
@@ -19,7 +19,7 @@
   text-align: left;
   will-change: transform, opacity;
 
-  &.ui-dropdown-hidden {
+  &.zw-dropdown-hidden {
     display: none;
   }
 }

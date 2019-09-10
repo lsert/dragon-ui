@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-type direction = 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'topLeft' | 'topCenter' | 'topRight';
+type direction = 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'topLeft' | 'topCenter' | 'topRight' | 'bottomScreen' | 'topScreen';
 export type trigger = 'click' | 'hover' | 'contextMenu';
 
 interface BasicPropsType {
@@ -18,9 +18,10 @@ interface BasicPropsType {
   notRenderInDisabledMode?: boolean;
   onVisibleChange(flag: boolean): void;
   getPopupContainer?(): HTMLElement;
+  width: string | number;
 }
 
-export type propsType = React.HTMLAttributes<any> & BasicPropsType;
+export type PropsType = React.HTMLAttributes<HTMLDivElement> & BasicPropsType;
 
 export interface StateType {
   visible?: boolean;
