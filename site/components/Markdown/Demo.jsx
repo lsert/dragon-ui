@@ -23,7 +23,7 @@ export default class Demo extends React.PureComponent {
     const { doc, title, source } = parserCodeString(props.children);
     this.containerId = `${parseInt(Math.random() * 1e9, 10).toString(36)}`;
     this.document = doc;
-    this.title = <span dangerouslySetInnerHTML={{ __html: title ? props.renderTitle(this.document[1]) : '' }} />;
+    this.title = <span className="block-title" dangerouslySetInnerHTML={{ __html: title ? props.renderTitle(this.document[1]) : '' }} />;
     this.source = source;
 
     this.state = {
@@ -75,12 +75,12 @@ export default class Demo extends React.PureComponent {
     const { showBlock } = this.state;
     return (
       <div className={`demo-block demo-box ${className}`}>
-        {this.title}
         <div
           className="source"
           id={this.containerId}
           ref={(elem) => { this.containerElem = elem; }}
         />
+        {this.title}
         <div style={{ display: showBlock ? 'block' : 'none' }}>
           <Highlight>{this.source[2]}</Highlight>
         </div>
