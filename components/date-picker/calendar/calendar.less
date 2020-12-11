@@ -1,0 +1,233 @@
+.zw-calendar {
+  padding: 10px;
+  display: inline-block;
+  font-size: 14px;
+  box-shadow: 0px 2px 5px 2px rgba(0, 0, 0, 0.1);
+
+  .zw-panel-item {
+    width: 34px;
+    height: 34px;
+    display: inline-block;
+    text-align: center;
+    line-height: 34px;
+  }
+
+  .panel-box {
+    min-height: 245px;
+
+    .zw-panel-item {
+      display: inline-block;
+      height: auto;
+      width: auto;
+      font-size: 12px;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px;
+      box-sizing: border-box;
+      position: relative;
+      height: 36px;
+      width: 36px;
+
+      &.hovered {
+        &::after{
+          content: "";
+          display: block;
+          position: absolute;
+          left: 0px;
+          top: 2px;
+          height: calc(100% - 6px);
+          width:  calc(100% - 3px);
+          border-top: 1px dashed #00BC70;
+          border-bottom: 1px dashed #00BC70;
+        }
+
+        &.hover-end {
+          &::after{
+            border-right: 1px dashed #00BC70;
+          }
+        }
+        &:last-child {
+          &::after{
+            border-right: 1px dashed #00BC70;
+          }
+        }
+        &:first-child {
+          &::after{
+            border-left: 1px dashed #00BC70;
+          }
+        }
+      }
+
+      &.disabled {
+        background-color: #F2F2F2;
+        border-top-left-radius: 50%;
+        border-bottom-left-radius: 50%;
+        color: #bcbcbc;
+        cursor: auto;
+
+        +.disabled {
+          background-color: #F2F2F2;
+          border-radius: 0;
+        }
+
+        &:last-of-type {
+          border-top-right-radius: 50%;
+          border-bottom-right-radius: 50%;
+        }
+
+        &:hover {
+          color: #bcbcbc;
+          background-color: #F2F2F2;
+        }
+      }
+
+      &.disabled.range-end {
+        border-top-right-radius: 50%;
+        border-bottom-right-radius: 50%;
+      }
+
+      .zw-panel-content {
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+      }
+
+      &.not-current-month {
+        .zw-panel-content {
+          color: #bcbcbc;
+        }
+      }
+
+      &:hover {
+        .zw-panel-content {
+          background-color: #e8f7f0;
+        }
+      }
+
+      &.disabled:hover {
+        .zw-panel-content {
+          background-color: #f2f2f2;
+        }
+      }
+
+      &.today {
+        .zw-panel-content {
+          border: 1px solid #00BC70;
+          box-sizing: border-box;
+        }
+      }
+
+      &.invalid-item {
+        cursor: auto;
+      }
+
+      &.actived {
+        &.hovered {
+          &::after {
+            border-left: 1px dashed #00BC70;
+          }
+        }
+
+        .zw-panel-content {
+          background-color: #00BC70;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .current-date-box {
+    text-align: center;
+  }
+
+  .opt-btn-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flip-btn {
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .current-date-box {
+    font-size: 14px;
+    color: #333;
+  }
+}
+
+@PanelR : 200;
+@PanelA : 30deg;
+
+// 时间选择器
+.ls-time-panel {
+  position: relative;
+
+  .circle-box {
+    position: relative;
+  }
+
+  .circle-box-inner {
+    height: 200px;
+    width: 200px;
+    left: -100px;
+    top: -100px;
+    border-radius: 50%;
+    background-color: yellowgreen;
+    position: absolute;
+
+    .time-icon-box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+    }
+
+
+
+    .loop(@n, @i: 1) when(@i <=@n) {
+      .time-icon-box-@{i} {
+        left: sin(@i * @PanelA) * 100 + 100px;
+        top: (1 - sin(90 - @i * @PanelA)) * 100px;
+      }
+    }
+
+    each(range(12), {
+        .time-icon-box:nth-child(@{value}) {
+          left: sin(@value * @PanelA) * 100 + 100px;
+          top: (1 - sin(90 - @value * @PanelA)) * 100px;
+        }
+      }
+
+    )
+  }
+
+  .move-btn {
+    width: 30px;
+    height: 30px;
+    background-color: blue;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: -15px;
+    margin-left: -15px;
+    z-index: 2;
+    border-radius: 50%;
+  }
+
+  .rotate-line {
+    position: absolute;
+    content: '';
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100px;
+    background-color: red;
+    top: 50%;
+    left: 50%;
+    transform-origin: left center;
+  }
+}

@@ -91,24 +91,24 @@ module.exports = {
       //   module: () => import('@/components/slider/slider.md'),
       //   style: false,
       // },
-      // {
-      //   key: 'calendar',
-      //   name: '日历',
-      //   module: () => import('@/components/calendar/calendar.md'),
-      //   style: false,
-      // },
-      // {
-      //   key: 'date-picker',
-      //   name: '日期选择器',
-      //   module: () => import('@/components/date-picker/datepicker.md'),
-      //   style: false,
-      // },
-      // {
-      //   key: 'time-picker',
-      //   name: '时间选择器',
-      //   module: () => import('@/components/time-picker/timepicker.md'),
-      //   style: false,
-      // },
+      {
+        key: 'calendar',
+        name: '日历',
+        module: () => import('@/components/calendar/calendar.md'),
+        style: true,
+      },
+      {
+        key: 'date-picker',
+        name: '日期选择器',
+        module: () => import('@/components/date-picker/demo.md'),
+        style: true,
+      },
+      {
+        key: 'time-picker',
+        name: '时间选择器',
+        module: () => import('@/components/time-picker/timepicker.md'),
+        style: true,
+      },
       // {
       //   key: 'upload',
       //   name: '上传',

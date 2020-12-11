@@ -1,207 +1,255 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEventHandler } from 'react';
 import classnames from 'classnames';
-import Format from '../utils/format';
-import Dropdown from '../dropdown';
-import Calendar from '../calendar';
-import Icon from '../icon';
-import Input from '../input';
-import PropsType from './PropsType';
-import LocaleReceiver from '../locale-provider/LocaleReceiver';
+import { isValidDate } from './calendar/tools';
+import { CaDate, isSameDay } from './tools';
+import YearPicker from './yearPicker';
 
-class DatePicker extends Component<PropsType, any> {
+interface PropsIF {
+  value: string | Date | number;                   // 支持字符串 日期对象和 时间戳
+  endValue?: CaDate;
+  range?: boolean;
+}
+
+interface StateIF {
+  value: CaDate;
+  today: CaDate;
+  currentMonthDate: CaDate;
+  itemList: CaDate[];
+  startDay?: CaDate;
+  endDay?: CaDate;
+  endValue?: CaDate;
+}
+
+class DatePicker extends Component<PropsIF, StateIF> {
   static defaultProps = {
-    isDisabled: false,
-    format: 'yyyy-MM-dd',
-    min: '',
-    max: '',
-    showTime: false,
-    allowInput: false,
-    onChange: () => { },
-    onInputInvalidDate: () => { },
+    isEndDate: true,
   };
 
-  private unmounted;
+  static toDateObj = (value: PropsIF['value']) => {
+    if (typeof value === 'string') {
+      const dateObj = new CaDate(value);
+      return isValidDate(dateObj) ? dateObj : new CaDate();
+    }
+    return new CaDate();
+  };
 
-  constructor(props) {
+  rangeSeletedOnce = false;
+
+  hasEndDay = false;
+
+  constructor(props: DatePicker['props']) {
     super(props);
-    this.unmounted = false;
+    const value = DatePicker.toDateObj(props.value);
     this.state = {
-      value: Format.date(props.value || props.defaultValue, props.format),
-      dropdown: false,
-      // flag: true,
+      value,
+      today: new CaDate(),
+      currentMonthDate: value,
+      itemList: this.createDateRange(value),
+      startDay: value,
+      endDay: value,
     };
   }
 
-  componentDidMount() {
-    this.unmounted = true;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { format } = this.props;
-    if ('value' in nextProps) {
-      this.setState({
-        value: Format.date(nextProps.value, format),
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    this.unmounted = false;
-  }
-
-  onDateChange(value, dropdown, isTimeChange = false) {
-    const { onChange } = this.props;
-    if (isTimeChange) { // hack方法 临时解决datetimePicker点击空白区域需要关闭的问题
-      this.setState({
-        flag: false,
-      }, () => {
-        setTimeout(() => {
-          this.setState({
-            flag: true,
-          });
-        });
-      });
-    }
-
-    this.setState(
-      {
-        value,
-        dropdown,
-      },
-      () => {
-        this.setDropdown(dropdown, () => onChange(value));
-      },
-    );
-  }
-
-  onInputDateValue = (e) => {
-    let { target: { value } } = e;
-    const { format } = this.props;
-
-    value = Format.transform(value, format);
-
-    if (Format.validate(value, format)) {
-      if (Format.inrange(value, format)) {
-        this.onDateChange(value, false);
-      } else {
-        this.props.onInputInvalidDate!(value);
+  createDateRange(value: Date) {
+    const month = value.getMonth() + 1;
+    const year = value.getFullYear();
+    const day = value.getDate();
+    const arr = [];
+    for (let i = 1; i < 31; i++) {
+      const c = new CaDate(year, month - 1, i);
+      if ((c.getMonth() + 1) !== month) {
+        break;
       }
+      arr.push(c);
     }
-    this.setState({
-      value,
+    let first = new CaDate(year, month - 1, 1);
+    const week = first.getDay();
+    for (let i = week - 1; i > 0; i--) {
+      first = new CaDate(first.getTime() - 86400000);
+      arr.unshift(first);
+    }
+
+    const { length } = arr;
+    let last = arr[arr.length - 1];
+    for (let i = length; i < 42; i++) {
+      last = new CaDate(last.getTime() + 86400000);
+      arr.push(last);
+    }
+    return arr;
+  }
+
+  onDayClick: MouseEventHandler<HTMLLIElement> = (e) => {
+    const { range, isEndDate } = this.props;
+    const { currentTarget: { dataset } } = e;
+    const { itemList, value } = this.state;
+    const { index } = dataset;
+    const i = Number(index);
+    const item = itemList[i];
+    const { currentMonthDate } = this.state;
+    if (item.getMonth() !== currentMonthDate.getMonth()) {
+      return this.setState({
+        value: item,
+        itemList: this.createDateRange(item),
+        currentMonthDate: item,
+      });
+    }
+    if (range) {
+      if (this.rangeSeletedOnce) {
+        this.setState({
+          endValue: item,
+        });
+      } else {
+        this.setState({
+          value: item,
+          endValue: undefined,
+        });
+      }
+      this.rangeSeletedOnce = !this.rangeSeletedOnce;
+    } else {
+      this.setState({
+        value: item,
+      });
+    }
+  };
+
+  onMouseEnter: MouseEventHandler<HTMLLIElement> = (e) => {
+    const { range } = this.props;
+    if (range) {
+      const { currentTarget: { dataset } } = e;
+      const { itemList } = this.state;
+      const { index } = dataset;
+      const i = Number(index);
+      const item = itemList[i];
+      // this.forceUpdate();
+    }
+  };
+
+  onMouseLeave: MouseEventHandler<HTMLLIElement> = (e) => {
+    const { range } = this.props;
+    if (range) {
+      const { currentTarget: { dataset } } = e;
+      const { itemList } = this.state;
+      const { index } = dataset;
+      const i = Number(index);
+      const item = itemList[i];
+      // this.forceUpdate();
+    }
+  };
+
+  onPrevMonthClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    this.setState((state) => {
+      const prevDate = state.currentMonthDate.addMonth(-1);
+      return {
+        currentMonthDate: prevDate,
+        itemList: this.createDateRange(prevDate),
+      };
     });
   };
 
-  setDropdown(isOpen, callback?) {
-    if (!this.unmounted) {
-      return;
-    }
+  onNextMonthClick: MouseEventHandler<HTMLDivElement> = () => {
+    this.setState((state) => {
+      const prevDate = state.currentMonthDate.addMonth(1);
+      return {
+        currentMonthDate: prevDate,
+        itemList: this.createDateRange(prevDate),
+      };
+    });
+  };
 
-    this.setState(
-      {
-        dropdown: isOpen,
-      },
-      () => {
-        if (callback) {
-          callback();
-        }
-      },
-    );
-  }
+  onPrevYearClick: MouseEventHandler<HTMLDivElement> = () => {
+    this.setState((state) => {
+      const prevDate = state.currentMonthDate.addYear(-1);
+      return {
+        currentMonthDate: prevDate,
+        itemList: this.createDateRange(prevDate),
+      };
+    });
+  };
 
-  renderOverlay() {
-    const { defaultValue, min, max, showTime, format } = this.props;
-    const { value } = this.state;
-
-    const values = {
-      value,
-      defaultValue,
-    };
-
-    if (!Format.validate(value, format) || !Format.inrange(value, format)) {
-      values.value = '';
-    }
-
-    return (
-      <Calendar
-        {...values}
-        format={format}
-        hasFooter
-        min={min}
-        max={max}
-        showTime={showTime}
-        onChange={(calendarValue, dropdown, isTimeChange) => this.onDateChange(calendarValue, dropdown, isTimeChange)}
-      />
-    );
-  }
+  onNextYearClick: MouseEventHandler<HTMLDivElement> = () => {
+    this.setState((state) => {
+      const prevDate = state.currentMonthDate.addYear(1);
+      return {
+        currentMonthDate: prevDate,
+        itemList: this.createDateRange(prevDate),
+      };
+    });
+  };
 
   render() {
-    const { placeholder, isDisabled, isRadius, size, style, locale, showTime, allowInput } = this.props;
-    const { value, dropdown, flag } = this.state;
-    const disabled = 'disabled' in this.props || isDisabled;
-    const radius = 'radius' in this.props || isRadius;
-
-    let valueText = placeholder || locale!.placeholder;
-    let hasValue = false;
-
-    if (value) {
-      valueText = value;
-      hasValue = true;
-    }
-
-    const cls = classnames('za-select', {
-      'za-select--open': dropdown,
-      disabled,
-      radius,
-      [`size-${size}`]: !!size,
-    });
-
-    const textCls = classnames('za-select__text', {
-      'za-select__text-placeholder': !hasValue,
-    });
-
+    const { range } = this.props;
+    const { value, itemList, currentMonthDate, endDay, startDay, endValue } = this.state;
+    const year = currentMonthDate.getFullYear();
+    const month = currentMonthDate.getMonth() + 1;
     return (
-      <Dropdown
-        onVisibleChange={(visible) => {
-          if (flag) {
-            return;
-          }
-          if (disabled) {
-            return;
-          }
-          this.setState({
-            dropdown: visible,
-          });
-        }}
-        content={this.renderOverlay()}
-        visible={dropdown}
-      >
-        <span className={cls} style={style}>
-          <span
-            className="za-select__selection"
-            aria-autocomplete="list"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span className={textCls}>
-              {
-                allowInput && !disabled && !showTime
-                  ? (
-                    <Input
-                      onChange={this.onInputDateValue}
-                      value={value}
-                      placeholder={valueText}
-                    />
-                  )
-                  : valueText
-              }
-            </span>
-            <Icon className="za-select__icon" type="date" />
-          </span>
-        </span>
-      </Dropdown>
+      <div className="zw-date-picker">
+        <div className="zw-date-panel-header">
+          <div className="toggle-btn left-btn" onClick={this.onPrevYearClick}>&lt;&lt;</div>
+          <div className="toggle-btn left-btn" onClick={this.onPrevMonthClick}>&lt;</div>
+          <div className="current-value-box">
+            <div className="show-selector year">{year}</div>
+            <div className="show-selector month">{month}</div>
+          </div>
+          <div className="toggle-btn right-btn" onClick={this.onNextMonthClick}>&gt;</div>
+          <div className="toggle-btn right-btn" onClick={this.onNextYearClick}>&gt;&gt;</div>
+        </div>
+        <div className="zw-date-panel-body">
+          <YearPicker value={year} />
+          <ul className="zw-date-picker-days-box">
+            {
+              itemList.map((item, index) => {
+                const itemMonth = item.getMonth();
+                const currentMonth = currentMonthDate.getMonth();
+                const isToday = isSameDay(new Date(), item);
+                const isSelected = isSameDay(value, item) || isSameDay(endValue, item);
+                let min;
+                let max;
+                if (range) {
+                  if (value && endValue) {
+                    const tsv = value.getTime();
+                    const tsev = endValue.getTime();
+                    if (tsev < tsv) {
+                      min = tsev;
+                      max = tsv;
+                    } else {
+                      min = tsv;
+                      max = tsev;
+                    }
+                  }
+                }
+                const cls = classnames('zw-date-picker-list', {
+                  'not-current-month': currentMonth !== itemMonth,
+                  today: isToday,
+                  selected: isSelected,
+                  'start-date': isSameDay(item, min),
+                  'end-date': isSameDay(item, max),
+                  'range-selected-start': isSelected && !!this.hasEndDay,
+                  'range-middle': (min && max && !this.rangeSeletedOnce) ? item.getTime() >= min && item.getTime() <= max : false,
+                });
+                return (
+                  <li
+                    key={String(index)}
+                    data-index={index}
+                    className={cls}
+                    onClick={this.onDayClick}
+                    onMouseEnter={this.onMouseEnter}
+                    onMouseLeave={this.onMouseLeave}
+                  >
+                    <div className="zw-data-picker-range">
+                      <div className="zw-date-picker-item">
+                        {item.getDate()}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+      </div>
     );
   }
 }
 
-export default LocaleReceiver('DatePicker')(DatePicker);
+
+export default DatePicker;
